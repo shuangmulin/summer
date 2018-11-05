@@ -20,8 +20,6 @@ import java.util.jar.JarFile;
  **/
 public class ClassResourceScanner {
 
-    private static final String CLASS_PATH = ClassResourceScanner.class.getResource("/").getPath();
-
     private String packageName;
 
     public Set<ClassResource> scan(String packageName) throws IOException, ClassNotFoundException {
@@ -69,8 +67,8 @@ public class ClassResourceScanner {
             // 标准文件我们就判断是否是class文件
             if (file.getName().endsWith("class")) {
                 // 如果是class文件我们就放入我们的集合中
-                String classNeme = packageName + "." + file.getName().substring(0, file.getName().lastIndexOf("."));
-                resources.add(new ClassResource(classNeme));
+                String className = packageName + "." + file.getName().substring(0, file.getName().lastIndexOf("."));
+                resources.add(new ClassResource(className));
             }
         }
     }
