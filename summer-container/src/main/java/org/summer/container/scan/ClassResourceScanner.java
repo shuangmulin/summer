@@ -1,6 +1,7 @@
-package org.summer.scan;
+package org.summer.container.scan;
 
 import org.summer.core.utils.StringUtils;
+import org.summer.container.scan.exception.ResourceScanException;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,28 +23,33 @@ public class ClassResourceScanner {
 
     private String packageName;
 
-    public Set<ClassResource> scan(String packageName) throws IOException, ClassNotFoundException {
-        Set<ClassResource> resources = new HashSet<>();
-        if (StringUtils.isBlank(packageName)) {
-            return resources;
-        }
-        this.packageName = packageName;
-
-        // 通过当前线程得到类加载器从而得到URL的枚举
-        Enumeration<URL> urlEnumeration = Thread.currentThread().getContextClassLoader().getResources(packageName.replace(".", "/").replace("\\", "/"));
-        while (urlEnumeration.hasMoreElements()) {
-            URL url = urlEnumeration.nextElement();
-            String protocol = url.getProtocol();
-            if ("jar".equalsIgnoreCase(protocol)) {
-                handleJar(url, resources);
-            } else if ("file".equalsIgnoreCase(protocol)) {
-                String path = url.getPath();
-                File file = new File(path);
-                handleFile(packageName, file, false, resources);
+    public Set<ClassResource> scan(String packageName) {
+        try {
+            Set<ClassResource> resources = new HashSet<>();
+            if (StringUtils.isBlank(packageName)) {
+                return resources;
             }
+            this.packageName = packageName;
+
+            // 通过当前线程得到类加载器从而得到URL的枚举
+            Enumeration<URL> urlEnumeration = Thread.currentThread().getContextClassLoader().getResources(packageName.replace(".", "/").replace("\\", "/"));
+            while (urlEnumeration.hasMoreElements()) {
+                URL url = urlEnumeration.nextElement();
+                String protocol = url.getProtocol();
+                if ("jar".equalsIgnoreCase(protocol)) {
+                    handleJar(url, resources);
+                } else if ("file".equalsIgnoreCase(protocol)) {
+                    String path = url.getPath();
+                    File file = new File(path);
+                    handleFile(packageName, file, false, resources);
+                }
+            }
+
+            return resources;
+        } catch (IOException | ClassNotFoundException e) {
+            throw new ResourceScanException(packageName + "包扫描出错");
         }
 
-        return resources;
     }
 
     /**

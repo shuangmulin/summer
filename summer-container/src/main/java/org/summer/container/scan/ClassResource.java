@@ -1,4 +1,6 @@
-package org.summer.scan;
+package org.summer.container.scan;
+
+import org.summer.core.utils.StringUtils;
 
 public class ClassResource {
 
@@ -10,6 +12,14 @@ public class ClassResource {
     }
 
     public Class<?> getClazz() {
+        if (StringUtils.isNotBlank(className)) {
+            try {
+                this.clazz = Class.forName(className);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                throw new RuntimeException("获取Class异常, " + className);
+            }
+        }
         return clazz;
     }
 
