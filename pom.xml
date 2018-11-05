@@ -11,8 +11,6 @@
   <modules>
     <module>summer-container</module>
     <module>summer-sample</module>
-      <module>summer-utils</module>
-    <module>summer-core</module>
     <module>summer-core</module>
   </modules>
 
