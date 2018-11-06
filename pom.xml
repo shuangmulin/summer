@@ -9,9 +9,9 @@
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
   <modules>
+    <module>summer-core</module>
     <module>summer-container</module>
     <module>summer-sample</module>
-    <module>summer-core</module>
   </modules>
 
   <name>summer</name>

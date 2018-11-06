@@ -8,15 +8,16 @@ package org.summer.container;
  **/
 public class BeanProcessContext {
 
-    private BeanDefinition beanDefinition;
+    private Object bean;
+    private String beanName;
     private BeanContainer container;
 
-    public BeanDefinition getBeanDefinition() {
-        return beanDefinition;
+    public Object getBean() {
+        return bean;
     }
 
-    public void setBeanDefinition(BeanDefinition beanDefinition) {
-        this.beanDefinition = beanDefinition;
+    public void setBean(Object bean) {
+        this.bean = bean;
     }
 
     public BeanContainer getContainer() {
@@ -25,5 +26,13 @@ public class BeanProcessContext {
 
     public void setContainer(BeanContainer container) {
         this.container = container;
+    }
+
+    public String getBeanName() {
+        return beanName;
+    }
+
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
     }
 }

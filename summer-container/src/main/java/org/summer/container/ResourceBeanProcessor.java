@@ -1,7 +1,4 @@
-package org.summer.container.scan;
-
-import org.summer.container.BeanProcessContext;
-import org.summer.container.BeanProcessor;
+package org.summer.container;
 
 /**
  * 处理Resource注解

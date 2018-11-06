@@ -14,6 +14,7 @@ public class BeanDefinition {
 
     public BeanDefinition(Class<?> clazz) {
         this.clazz = clazz;
+        this.beanName = clazz.getSimpleName();
     }
 
     public Class<?> getClazz() {
@@ -34,5 +35,20 @@ public class BeanDefinition {
 
     public void setBeanName(String beanName) {
         this.beanName = beanName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BeanDefinition that = (BeanDefinition) o;
+
+        return beanName != null ? beanName.equals(that.beanName) : that.beanName == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return beanName != null ? beanName.hashCode() : 0;
     }
 }

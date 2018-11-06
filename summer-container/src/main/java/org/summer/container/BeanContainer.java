@@ -1,6 +1,7 @@
 package org.summer.container;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,7 +16,7 @@ public class BeanContainer {
 
     private static volatile BeanContainer beanContainer;
 
-    private Map<String, Object> beans = new ConcurrentHashMap<>();
+    private Map<String, BeanDefinition> beans = new ConcurrentHashMap<>();
 
     public static BeanContainer getInstance() {
         if (beanContainer != null) {
@@ -33,8 +34,8 @@ public class BeanContainer {
     @SuppressWarnings("unchecked")
     public <T> List<T> getByType(Class<T> clazz) {
         List<T> returnBeans = new ArrayList<>();
-        for (Object bean : beans.values()) {
-            if (clazz.isAssignableFrom(bean.getClass())) {
+        for (BeanDefinition bean : beans.values()) {
+            if (clazz.isAssignableFrom(bean.getClazz())) {
                 returnBeans.add((T) bean);
             }
         }
@@ -42,7 +43,11 @@ public class BeanContainer {
     }
 
     public void addBean(BeanDefinition beanDefinition) {
-        beans.put(beanDefinition.getBeanName(), beanDefinition.getBean());
+        beans.put(beanDefinition.getBeanName(), beanDefinition);
+    }
+
+    public Collection<BeanDefinition> getAllBean() {
+        return beans.values();
     }
 
 }
