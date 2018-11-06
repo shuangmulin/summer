@@ -6,6 +6,7 @@ public class ClassResource {
 
     private Class<?> clazz;
     private final String className;
+    private boolean initialization;
 
     public ClassResource(String className) {
         this.className = className;
@@ -29,6 +30,14 @@ public class ClassResource {
 
     public String getClassName() {
         return className;
+    }
+
+    public boolean isInitialization() {
+        return initialization;
+    }
+
+    public void setInitialization(boolean initialization) {
+        this.initialization = initialization;
     }
 
     @Override

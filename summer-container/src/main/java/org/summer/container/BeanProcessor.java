@@ -8,8 +8,6 @@ package org.summer.container;
  **/
 public interface BeanProcessor {
 
-    Object beforeInitialization(Object bean, BeanContainer container);
-
-    Object afterInitialization(Object bean, BeanContainer container);
+    void process(BeanProcessContext context);
 
 }
