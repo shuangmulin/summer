@@ -8,7 +8,7 @@ package org.summer.container;
  **/
 public class ResourceBeanProcessor implements BeanProcessor {
     @Override
-    public void process(BeanProcessContext context) {
-
+    public Object process(BeanProcessContext context) {
+        return null;
     }
 }
