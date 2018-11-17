@@ -1,9 +1,6 @@
 package org.summer.container;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -17,6 +14,8 @@ public class BeanContainer {
     private static volatile BeanContainer beanContainer;
 
     private Map<String, BeanDefinition> beans = new ConcurrentHashMap<>();
+
+    private List<BeanMethodInterceptor> beanMethodInterceptors;
 
     public static BeanContainer getInstance() {
         if (beanContainer != null) {
@@ -50,4 +49,13 @@ public class BeanContainer {
         return beans.values();
     }
 
+    public List<BeanMethodInterceptor> getBeanMethodInterceptors() {
+        if (beanMethodInterceptors != null) {
+            return beanMethodInterceptors;
+        }
+
+        beanMethodInterceptors = getByType(BeanMethodInterceptor.class);
+        beanMethodInterceptors.sort(Comparator.comparingInt(Order::order));
+        return beanMethodInterceptors;
+    }
 }

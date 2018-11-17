@@ -26,7 +26,7 @@ public class BeanDefinition {
     }
 
     public void setBean(Object bean) {
-        this.bean = bean;
+        this.bean = new BeanProxy(bean);
     }
 
     public String getBeanName() {

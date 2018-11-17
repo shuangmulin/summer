@@ -21,10 +21,11 @@ public class BeanProxy implements MethodInterceptor {
 
     @Override
     public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
-
-        Object invokeResult = methodProxy.invokeSuper(bean, args);
-
-        return invokeResult;
+        InterceptorChain interceptorChain =
+                new InterceptorChain(method, args,
+                        BeanContainer.getInstance().getBeanMethodInterceptors(),
+                        () -> methodProxy.invokeSuper(bean, args));
+        return interceptorChain.doChain(interceptorChain).getReturnValue();
     }
 
 }
