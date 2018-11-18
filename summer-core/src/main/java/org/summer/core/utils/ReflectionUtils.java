@@ -1,6 +1,9 @@
 package org.summer.core.utils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 反射有关工具类
@@ -18,6 +21,19 @@ public class ReflectionUtils {
             }
         }
         return false;
+    }
+
+    public static List<Field> listAllField(Class<?> clazz) {
+        List<Field> fields = new ArrayList<>();
+        while (clazz != null) {
+            Field[] declaredFields = clazz.getDeclaredFields();
+            for (Field declaredField : declaredFields) {
+                declaredField.setAccessible(true);
+                fields.add(declaredField);
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return fields;
     }
 
 }

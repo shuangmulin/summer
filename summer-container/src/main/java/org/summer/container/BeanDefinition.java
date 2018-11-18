@@ -11,10 +11,11 @@ public class BeanDefinition {
     private final Class<?> clazz;
     private Object bean;
     private String beanName;
+    private String className;
 
     public BeanDefinition(Class<?> clazz) {
         this.clazz = clazz;
-        this.beanName = clazz.getSimpleName();
+        this.className = clazz.getName();
     }
 
     public Class<?> getClazz() {
@@ -26,7 +27,7 @@ public class BeanDefinition {
     }
 
     public void setBean(Object bean) {
-        this.bean = new BeanProxy(bean);
+        this.bean = bean;
     }
 
     public String getBeanName() {
@@ -37,18 +38,7 @@ public class BeanDefinition {
         this.beanName = beanName;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        BeanDefinition that = (BeanDefinition) o;
-
-        return beanName != null ? beanName.equals(that.beanName) : that.beanName == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return beanName != null ? beanName.hashCode() : 0;
+    public String getClassName() {
+        return className;
     }
 }

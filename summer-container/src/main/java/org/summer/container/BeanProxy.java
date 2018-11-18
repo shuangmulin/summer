@@ -11,20 +11,12 @@ import java.lang.reflect.Method;
  * @author 钟宝林
  * @date 2018-11-07 14:37
  **/
-public class BeanProxy implements MethodInterceptor {
-
-    private Object bean;
-
-    public BeanProxy(Object bean) {
-        this.bean = bean;
-    }
+class BeanProxy implements MethodInterceptor {
 
     @Override
     public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
-        InterceptorChain interceptorChain =
-                new InterceptorChain(method, args,
-                        BeanContainer.getInstance().getBeanMethodInterceptors(),
-                        () -> methodProxy.invokeSuper(bean, args));
+        InvokeCallback invokeCallback = () -> methodProxy.invokeSuper(proxy, args);
+        InterceptorChain interceptorChain = new InterceptorChain(method, args, BeanContainer.getInstance().getBeanMethodInterceptors(), invokeCallback);
         return interceptorChain.doChain(interceptorChain).getReturnValue();
     }
 

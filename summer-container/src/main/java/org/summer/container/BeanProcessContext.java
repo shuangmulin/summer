@@ -9,7 +9,6 @@ package org.summer.container;
 public class BeanProcessContext {
 
     private Object bean;
-    private String beanName;
     private BeanContainer container;
 
     public Object getBean() {
@@ -26,13 +25,5 @@ public class BeanProcessContext {
 
     public void setContainer(BeanContainer container) {
         this.container = container;
-    }
-
-    public String getBeanName() {
-        return beanName;
-    }
-
-    public void setBeanName(String beanName) {
-        this.beanName = beanName;
     }
 }

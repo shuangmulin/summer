@@ -1,5 +1,7 @@
 package org.summer.container;
 
+import org.summer.core.utils.StringUtils;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -33,15 +35,24 @@ public class BeanContainer {
     @SuppressWarnings("unchecked")
     public <T> List<T> getByType(Class<T> clazz) {
         List<T> returnBeans = new ArrayList<>();
-        for (BeanDefinition bean : beans.values()) {
-            if (clazz.isAssignableFrom(bean.getClazz())) {
-                returnBeans.add((T) bean);
+        for (BeanDefinition beanDefinition : beans.values()) {
+            if (clazz.isAssignableFrom(beanDefinition.getClazz())) {
+                returnBeans.add((T) beanDefinition.getBean());
             }
         }
         return returnBeans;
     }
 
     public void addBean(BeanDefinition beanDefinition) {
+        String beanName = beanDefinition.getBeanName();
+        if (StringUtils.isBlank(beanName)) {
+            beanName = StringUtils.toLowerCaseFirstOne(beanDefinition.getClazz().getSimpleName());
+            beanDefinition.setBeanName(beanName);
+        }
+        Object bean = getBeanByName(beanName);
+        if (bean != null) {
+            throw new IllegalArgumentException(beanName + "已存在，容器启动失败");
+        }
         beans.put(beanDefinition.getBeanName(), beanDefinition);
     }
 
@@ -57,5 +68,16 @@ public class BeanContainer {
         beanMethodInterceptors = getByType(BeanMethodInterceptor.class);
         beanMethodInterceptors.sort(Comparator.comparingInt(Order::order));
         return beanMethodInterceptors;
+    }
+
+    public Object getBeanByName(String beanName) {
+        if (StringUtils.isBlank(beanName)) {
+            throw new IllegalStateException("未知beanName");
+        }
+        BeanDefinition beanDefinition = beans.get(beanName);
+        if (beanDefinition != null) {
+            return beanDefinition.getBean();
+        }
+        return null;
     }
 }

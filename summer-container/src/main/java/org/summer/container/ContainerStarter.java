@@ -1,9 +1,10 @@
 package org.summer.container;
 
+import net.sf.cglib.core.DefaultNamingPolicy;
+import net.sf.cglib.proxy.Enhancer;
 import org.summer.container.annotation.Component;
 import org.summer.container.scan.ClassResource;
 import org.summer.container.scan.ClassResourceScanner;
-import org.summer.core.utils.StringUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -29,12 +30,8 @@ public class ContainerStarter {
             Component component = clazz.getAnnotation(Component.class);
             if (component != null) {
                 String beanName = component.value();
-                if (StringUtils.isBlank(beanName)) {
-                    beanName = clazz.getSimpleName();
-                }
                 BeanDefinition beanDefinition = new BeanDefinition(clazz);
                 beanDefinition.setBeanName(beanName);
-                beanDefinition.setBean(clazz.newInstance());
                 container.addBean(beanDefinition);
             }
         }
@@ -45,17 +42,34 @@ public class ContainerStarter {
             container.addBean(defaultBeanDefinition);
         }
 
-        // 处理Bean
+        // 代理bean
         Collection<BeanDefinition> allBean = container.getAllBean();
-        for (Object bean : allBean) {
+        for (BeanDefinition beanDefinition : allBean) {
+            Enhancer enhancer = new Enhancer();
+            enhancer.setSuperclass(beanDefinition.getClazz());
+            enhancer.setCallback(new BeanProxy());
+            enhancer.setNamingPolicy(new DefaultNamingPolicy() {
+                public String getTag() {
+                    return "BySummer";
+                }
+                public String toString() {
+                    return getTag();
+                }
+            });
+            beanDefinition.setBean(enhancer.create());
+        }
+
+        // 处理bean
+        for (BeanDefinition beanDefinition : allBean) {
             List<BeanProcessor> beanProcessors = BeanContainer.getInstance().getByType(BeanProcessor.class);
             for (BeanProcessor beanProcessor : beanProcessors) {
                 BeanProcessContext context = new BeanProcessContext();
                 context.setContainer(container);
-                context.setBean(bean);
+                context.setBean(beanDefinition.getBean());
                 beanProcessor.process(context);
             }
         }
+
         return container;
     }
 

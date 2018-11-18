@@ -19,13 +19,7 @@ public final class DefaultBeanConfig {
     public static Set<BeanDefinition> listDefaultBean() {
         Set<BeanDefinition> beanDefinitions = new HashSet<>();
         for (Class<?> defaultBeanClass : defaultBeanClasses) {
-            BeanDefinition beanDefinition = new BeanDefinition(defaultBeanClass);
-            try {
-                beanDefinition.setBean(defaultBeanClass.newInstance());
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            beanDefinitions.add(beanDefinition);
+            beanDefinitions.add(new BeanDefinition(defaultBeanClass));
         }
         return beanDefinitions;
     }

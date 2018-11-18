@@ -16,4 +16,14 @@ public final class StringUtils {
         return !isBlank(str);
     }
 
+    /**
+     * 首字母转小写
+     */
+    public static String toLowerCaseFirstOne(String str){
+        if(Character.isLowerCase(str.charAt(0)))
+            return str;
+        else
+            return (new StringBuilder()).append(Character.toLowerCase(str.charAt(0))).append(str.substring(1)).toString();
+    }
+
 }

@@ -1,6 +1,7 @@
 package org.summer.sample.service;
 
 import org.summer.container.annotation.Component;
+import org.summer.sample.entity.User;
 
 /**
  * @author 钟宝林
@@ -8,4 +9,11 @@ import org.summer.container.annotation.Component;
  **/
 @Component
 public class UserServiceImpl implements UserService {
+    @Override
+    public User getUser() {
+        User user = new User();
+        user.setId("id");
+        user.setName("name");
+        return user;
+    }
 }
