@@ -80,4 +80,22 @@ public class BeanContainer {
         }
         return null;
     }
+
+    public <T> Map<String, T> getBeansOfType(Class<T> type) {
+        if (type == null) {
+            return null;
+        }
+
+        Map<String, T> result = new HashMap<>();
+        for (Map.Entry<String, BeanDefinition> entry : beans.entrySet()) {
+            String beanName = entry.getKey();
+            BeanDefinition beanDefinition = entry.getValue();
+
+            Class<?> clazz = beanDefinition.getClazz();
+            if (type.isAssignableFrom(clazz)) {
+                result.put(beanName, (T) beanDefinition.getBean());
+            }
+        }
+        return result;
+    }
 }
