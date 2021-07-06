@@ -98,4 +98,11 @@ public class BeanContainer {
         }
         return result;
     }
+
+    public void registerSingleton(String beanName, Object bean) {
+        BeanDefinition beanDefinition = new BeanDefinition(bean.getClass());
+        beanDefinition.setBeanName(beanName);
+        beanDefinition.setBean(bean);
+        addBean(beanDefinition);
+    }
 }
