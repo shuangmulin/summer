@@ -6,9 +6,7 @@ import org.summer.container.annotation.Component;
 import org.summer.container.scan.ClassResource;
 import org.summer.container.scan.ClassResourceScanner;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 容器启动器
@@ -18,9 +16,12 @@ import java.util.Set;
  **/
 public class ContainerStarter {
 
-    private BeanContainer container = BeanContainer.getInstance();
+    private final BeanContainer container = BeanContainer.getInstance();
 
-    public BeanContainer start(String packageName) throws IllegalAccessException, InstantiationException {
+    public BeanContainer start(String packageName) {
+        Collection<BeanDefinition> existsBeans = container.getAllBean();
+        Collection<BeanDefinition> newExistsBeans = new ArrayList<>(existsBeans);
+
         ClassResourceScanner classResourceScanner = new ClassResourceScanner();
         Set<ClassResource> classResources = classResourceScanner.scan(packageName);
 
@@ -45,6 +46,10 @@ public class ContainerStarter {
         // 代理bean
         Collection<BeanDefinition> allBean = container.getAllBean();
         for (BeanDefinition beanDefinition : allBean) {
+            if (newExistsBeans.contains(beanDefinition)) {
+                // 已经存在的bean不重复处理
+                continue;
+            }
             Enhancer enhancer = new Enhancer();
             enhancer.setSuperclass(beanDefinition.getClazz());
             enhancer.setCallback(new BeanProxy());
