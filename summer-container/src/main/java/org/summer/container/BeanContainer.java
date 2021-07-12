@@ -1,5 +1,7 @@
 package org.summer.container;
 
+import org.summer.container.event.Event;
+import org.summer.container.event.EventMulticaster;
 import org.summer.core.utils.StringUtils;
 
 import java.util.*;
@@ -43,6 +45,17 @@ public class BeanContainer {
         return returnBeans;
     }
 
+    @SuppressWarnings("unchecked")
+    public List<BeanDefinition> getBeanDefinitionByType(Class clazz) {
+        List<BeanDefinition> returnBeans = new ArrayList<>();
+        for (BeanDefinition beanDefinition : beans.values()) {
+            if (clazz.isAssignableFrom(beanDefinition.getClazz())) {
+                returnBeans.add(beanDefinition);
+            }
+        }
+        return returnBeans;
+    }
+
     public void addBean(BeanDefinition beanDefinition) {
         String beanName = beanDefinition.getBeanName();
         if (StringUtils.isBlank(beanName)) {
@@ -68,6 +81,19 @@ public class BeanContainer {
         beanMethodInterceptors = getByType(BeanMethodInterceptor.class);
         beanMethodInterceptors.sort(Comparator.comparingInt(Order::order));
         return beanMethodInterceptors;
+    }
+
+    /**
+     * 发布事件
+     *
+     * @param event 要发布的事件
+     */
+    public void publishEvent(Event event) {
+        List<EventMulticaster> eventMulticasterList = getByType(EventMulticaster.class);
+        if (eventMulticasterList == null || eventMulticasterList.size() <= 0) {
+            throw new IllegalStateException("没有可用的事件多播器");
+        }
+        eventMulticasterList.get(0).multicastEvent(event);
     }
 
     public Object getBeanByName(String beanName) {

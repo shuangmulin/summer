@@ -1,5 +1,7 @@
 package org.summer.container;
 
+import org.summer.container.event.EventMulticaster;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,7 +15,8 @@ public final class DefaultBeanConfig {
 
     private static Class<?>[] defaultBeanClasses = new Class[]{
             AutowiredBeanProcessor.class,
-            ResourceBeanProcessor.class
+            ResourceBeanProcessor.class,
+            EventMulticaster.class
     };
 
     public static Set<BeanDefinition> listDefaultBean() {

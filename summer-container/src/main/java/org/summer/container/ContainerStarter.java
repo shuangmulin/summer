@@ -3,6 +3,8 @@ package org.summer.container;
 import net.sf.cglib.core.DefaultNamingPolicy;
 import net.sf.cglib.proxy.Enhancer;
 import org.summer.container.annotation.Component;
+import org.summer.container.event.EventMulticaster;
+import org.summer.container.event.impl.ContainerStartedEvent;
 import org.summer.container.scan.ClassResource;
 import org.summer.container.scan.ClassResourceScanner;
 
@@ -25,7 +27,12 @@ public class ContainerStarter {
         ClassResourceScanner classResourceScanner = new ClassResourceScanner();
         Set<ClassResource> classResources = classResourceScanner.scan(packageName);
 
-        // 先把Bean放入容器
+        // 把容器自己放进去
+        BeanDefinition beanContainerDefinition = new BeanDefinition(BeanContainer.class);
+        beanContainerDefinition.setBeanName("beanContainer");
+        container.addBean(beanContainerDefinition);
+
+        // 把Bean放入容器
         for (ClassResource classResource : classResources) {
             Class<?> clazz = classResource.getClazz();
             Component component = clazz.getAnnotation(Component.class);
@@ -74,6 +81,8 @@ public class ContainerStarter {
                 beanProcessor.process(context);
             }
         }
+
+        container.publishEvent(new ContainerStartedEvent(this)); // 发布容器启动完毕事件
 
         return container;
     }

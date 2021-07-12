@@ -19,19 +19,17 @@ public class ResourceBeanProcessor implements BeanProcessor {
         Object bean = context.getBean();
         Class<?> clazz = bean.getClass();
         List<Field> fields = ReflectionUtils.listAllField(clazz);
-        if (fields != null) {
-            for (Field field : fields) {
-                Resource resourceAnnotation = field.getAnnotation(Resource.class);
-                if (resourceAnnotation == null) {
-                    continue;
-                }
-                Object injectBean = findInjectBean(clazz, resourceAnnotation, field);
-                try {
-                    field.set(bean, injectBean);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    throw new IllegalStateException("类" + clazz.getName() + "的字段" + field.getName() + "注入失败");
-                }
+        for (Field field : fields) {
+            Resource resourceAnnotation = field.getAnnotation(Resource.class);
+            if (resourceAnnotation == null) {
+                continue;
+            }
+            Object injectBean = findInjectBean(clazz, resourceAnnotation, field);
+            try {
+                field.set(bean, injectBean);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                throw new IllegalStateException("类" + clazz.getName() + "的字段" + field.getName() + "注入失败");
             }
         }
         return bean;
