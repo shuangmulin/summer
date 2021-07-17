@@ -92,8 +92,6 @@ public class ClassResourceScanner {
                 Enumeration<JarEntry> jarEntryEnumeration = jarFile.entries();
                 while (jarEntryEnumeration.hasMoreElements()) {
                     JarEntry entry = jarEntryEnumeration.nextElement();
-                    boolean directory = entry.isDirectory();
-                    System.out.println(directory);
                     String jarEntryName = entry.getName();
                     // 这里我们需要过滤不是class文件和不在basePack包名下的类
                     if (jarEntryName.contains(".class") && jarEntryName.replaceAll("/", ".").startsWith(packageName)) {
